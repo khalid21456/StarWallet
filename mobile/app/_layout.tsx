@@ -1,22 +1,35 @@
 import { ThemeProvider, type Theme as NavTheme } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
 
+import { seedDefaultData } from '@/src/db/bootstrap';
+import { db } from '@/src/db/db';
+import { truncateDatabase } from '@/src/db/schema';
 import { darkTheme, lightTheme } from '@/src/theme';
+import { FONT_FAMILY } from '@/src/theme/typography';
+
+// TEMPORARY one-time reset: wipes all existing categories/budgets/transactions
+// so the new per-category budget feature starts from a clean slate. Remove
+// this line after running the app once — leaving it in would wipe data on
+// every launch.
+truncateDatabase(db);
+
+seedDefaultData();
+
+// Keep the native splash screen up until the custom font has loaded, so the
+// app never flashes system-font text before swapping to Playwrite NZ Basic.
+SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   anchor: '(tabs)',
 };
 
-/**
- * Bridges our design-system theme into React Navigation so the
- * navigator's default surface colors match our pastel background
- * (no white flashes on push/pop).
- */
 function toNavTheme(scheme: 'light' | 'dark'): NavTheme {
   const t = scheme === 'dark' ? darkTheme : lightTheme;
   return {
@@ -30,16 +43,25 @@ function toNavTheme(scheme: 'light' | 'dark'): NavTheme {
       notification: t.colors.danger,
     },
     fonts: {
-      regular: { fontFamily: 'System', fontWeight: '400' },
-      medium: { fontFamily: 'System', fontWeight: '500' },
-      bold: { fontFamily: 'System', fontWeight: '700' },
-      heavy: { fontFamily: 'System', fontWeight: '800' },
+      regular: { fontFamily: FONT_FAMILY, fontWeight: 'normal' },
+      medium: { fontFamily: FONT_FAMILY, fontWeight: 'normal' },
+      bold: { fontFamily: FONT_FAMILY, fontWeight: 'normal' },
+      heavy: { fontFamily: FONT_FAMILY, fontWeight: 'normal' },
     },
   };
 }
 
 export default function RootLayout() {
   const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const [fontsLoaded] = useFonts({
+    [FONT_FAMILY]: require('../fonts/Playwrite_NZ_Basic/PlaywriteNZBasic-VariableFont_wght.ttf'),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) SplashScreen.hideAsync();
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
 
   return (
     <SafeAreaProvider>
