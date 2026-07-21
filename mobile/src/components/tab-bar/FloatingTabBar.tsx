@@ -28,7 +28,7 @@ const ROUTE_META: Record<string, IconPair> = {
   index: { icon: 'home-outline', iconActive: 'home', label: 'Home' },
   stats: { icon: 'stats-chart-outline', iconActive: 'stats-chart', label: 'Stats' },
   activity: { icon: 'time-outline', iconActive: 'time', label: 'Activity' },
-  profile: { icon: 'person-outline', iconActive: 'person', label: 'Profile' },
+  budget: { icon: 'wallet-outline', iconActive: 'wallet', label: 'Budget' },
 };
 
 export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
@@ -38,10 +38,10 @@ export function FloatingTabBar({ state, navigation }: BottomTabBarProps) {
   const addRoute = state.routes.find((r) => r.name === 'add');
   const sideRoutes = state.routes.filter((r) => r.name !== 'add');
 
-  // Split side routes into left (Home, Stats) and right (Activity, Profile).
+  // Split side routes into left (Home, Stats) and right (Activity, Budget).
   // The FAB sits between them.
   const left = sideRoutes.filter((r) => ['index', 'stats'].includes(r.name));
-  const right = sideRoutes.filter((r) => ['activity', 'profile'].includes(r.name));
+  const right = sideRoutes.filter((r) => ['activity', 'budget'].includes(r.name));
 
   const renderItem = (routeName: string, key: string) => {
     const meta = ROUTE_META[routeName];
