@@ -25,7 +25,7 @@ export function SectionHeader({ title, actionLabel, onAction }: SectionHeaderPro
       <Text variant="subheading">{title}</Text>
       {actionLabel ? (
         <Pressable onPress={onAction} hitSlop={8}>
-          <Text variant="caption" tone="primary" weight="600">
+          <Text variant="caption" tone="primary">
             {actionLabel}
           </Text>
         </Pressable>

@@ -65,7 +65,6 @@ export function Button({
         ) : (
           <Text
             variant="body"
-            weight="600"
             tone={
               variant === 'primary'
                 ? 'textOnPrimary'

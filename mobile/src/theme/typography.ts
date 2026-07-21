@@ -1,60 +1,54 @@
-import { Platform, type TextStyle } from 'react-native';
+import type { TextStyle } from 'react-native';
 
 /**
- * Font family — SF Pro on iOS, Roboto on Android, Inter web fallback.
- * Loading custom fonts (e.g. real Inter via expo-font) can be wired
- * later without changing consumer code; just swap the values here.
+ * Custom display font (Playwrite NZ Basic — SIL Open Font License, loaded via
+ * `expo-font` in `app/_layout.tsx`) used for every text style in the app.
+ * It's a variable font rendered at its default weight, so styles below don't
+ * vary `fontWeight` — hierarchy comes from size/letter-spacing instead.
  */
-export const fontFamily = Platform.select({
-  ios: 'System',
-  android: 'sans-serif',
-  default: 'Inter, system-ui, sans-serif',
-}) as string;
+export const FONT_FAMILY = 'PlaywriteNZBasic';
 
 const base: TextStyle = {
-  fontFamily,
+  fontFamily: FONT_FAMILY,
+  fontWeight: 'normal',
   includeFontPadding: false,
 };
 
 export const typography = {
   display: {
     ...base,
-    fontSize: 32,
-    lineHeight: 38,
-    fontWeight: '700',
-    letterSpacing: -0.5,
+    fontSize: 25,
+    lineHeight: 40,
+    letterSpacing: 0,
   },
   heading: {
     ...base,
-    fontSize: 24,
-    lineHeight: 30,
-    fontWeight: '700',
-    letterSpacing: -0.3,
+    fontSize: 26,
+    lineHeight: 32,
+    letterSpacing: 0,
   },
   subheading: {
     ...base,
     fontSize: 17,
-    lineHeight: 22,
-    fontWeight: '600',
-    letterSpacing: -0.1,
+    lineHeight: 25,
+    letterSpacing: 0,
   },
   body: {
     ...base,
     fontSize: 15,
-    lineHeight: 22,
-    fontWeight: '500',
+    lineHeight: 23,
+    letterSpacing: 0,
   },
   caption: {
     ...base,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '500',
+    fontSize: 14,
+    lineHeight: 19,
+    letterSpacing: 0,
   },
   label: {
     ...base,
-    fontSize: 11,
-    lineHeight: 14,
-    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 15,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
