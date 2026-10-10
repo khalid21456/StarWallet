@@ -3,11 +3,12 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
 
+import { SplashOverlay } from '@/src/components/splash/SplashOverlay';
 import { seedDefaultData } from '@/src/db/bootstrap';
 import { db } from '@/src/db/db';
 import { truncateDatabase } from '@/src/db/schema';
@@ -53,9 +54,12 @@ function toNavTheme(scheme: 'light' | 'dark'): NavTheme {
 
 export default function RootLayout() {
   const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const [splashDone, setSplashDone] = useState(false);
   const [fontsLoaded] = useFonts({
     [FONT_FAMILY]: require('../fonts/Playwrite_NZ_Basic/PlaywriteNZBasic-VariableFont_wght.ttf'),
   });
+
+  const dismissSplash = useCallback(() => setSplashDone(true), []);
 
   useEffect(() => {
     if (fontsLoaded) SplashScreen.hideAsync();
@@ -69,6 +73,7 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: 'transparent' } }}>
           <Stack.Screen name="(tabs)" />
         </Stack>
+        {!splashDone ? <SplashOverlay onFinish={dismissSplash} /> : null}
         <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       </ThemeProvider>
     </SafeAreaProvider>
